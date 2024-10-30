@@ -50,24 +50,22 @@ router.get("/:id", (req, res, next) => {
   // Board.findById(req.param.id).then(board=>{
   Board.findById(req.params.id)
     .then((board) => {
-      let boardHistory = req.cookies[BOARD_HISTORY_COOKIE];
-      if (boardHistory) {
-        boardHistory = JSON.parse(boardHistory);
-      } else {
-        boardHistory = [];
+      if (!req.session.boardPath) {
+        req.session.boardPath = [];
       }
 
       // console.log(res);
 
       // http://localhost:3000/board/6721e2bce0f5b91682934813
 
-      boardHistory.push(board.title);
-      if (boardHistory.length > 10) {
-        boardHistory.shift();
+      req.session.boardPath.push(board.title);
+
+      if (req.session.boardPath.length > 10) {
+        req.session.boardPath.shift();
       }
-      res.cookie(BOARD_HISTORY_COOKIE, JSON.stringify(boardHistory), {
-        secure: true,
-      });
+
+      console.log(req.session.boardPath);
+
       res.json(board);
     })
     .catch((err) => {
