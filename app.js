@@ -9,6 +9,9 @@ var usersRouter = require("./routes/users");
 const boardRouter = require("./routes/board");
 const birdRouter = require("./routes/birds");
 const commentRouter = require("./routes/comment");
+const session = require("express-session");
+
+// const cors = require("cors");
 
 // localhost:3000
 
@@ -16,7 +19,7 @@ var app = express();
 
 // view engine setup
 // view는 react를 사용
-// view는 json 포매터임
+// view는 json을 뿌려주는 역할을 함
 // app.set("views", path.join(__dirname, "views"));
 // app.set("view engine", "ejs");
 
@@ -25,7 +28,31 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+// Session 설정. express는 설정이든 router든 배열 형태로 전달 되므로, 순서가 중요함.
+// 이 곳에 session middleware를 설정한 이유는 아래 요청들에게 영향을 미치기 때문
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "<my-secret>",
+    resave: true,
+    saveUninitialized: true,
+    cookie: {
+      httpOnly: true,
+      secure: false, // https 가능
+    },
+  })
+);
+
 app.use(express.static(path.join(__dirname, "public")));
+
+// const corsOptions = {
+//   origin: "http://localhost:5173",
+//   credentials: true,
+// };
+
+// app.use(cors(corsOptions));
+
+// app.use(cors());
 
 app.get("/hello-world", (req, res, next) => {
   console.log(req);
@@ -70,5 +97,13 @@ app.use(function (err, req, res, next) {
   // res.render("error");
   res.json(res.locals);
 });
+
+// router는 반복문을 순회함.
+// console찍어서 확인해보기
+// console.log(app._router);
+
+// const mongoose = require("./db");
+
+// console.log(mongoose.models);
 
 module.exports = app;

@@ -18,7 +18,7 @@ const commentSchema = new mongoose.Schema({
   board: {
     type: mongoose.Types.ObjectId,
     required: true,
-    ref: "Board",
+    ref: "Board", // mongoose.models에서 key값으로 참조해서 value값을 가져옴.
   },
   createdAt: { type: Date, default: Date.now },
 });
