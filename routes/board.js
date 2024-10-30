@@ -46,6 +46,13 @@ router.get("/", (req, res, next) => {
 
 const BOARD_HISTORY_COOKIE = "board-path";
 
+// 67206a15684d658606422644
+// 67206c15efd861aa4811ccea
+// 67206c1cefd861aa4811ccec
+// 67206d15efd861aa4811ccee
+// 6721e2b4e0f5b91682934811
+// 6721e2bce0f5b91682934813
+
 router.get("/:id", (req, res, next) => {
   // Board.findById(req.param.id).then(board=>{
   Board.findById(req.params.id)
