@@ -9,6 +9,7 @@ var usersRouter = require("./routes/users");
 const boardRouter = require("./routes/board");
 const birdRouter = require("./routes/birds");
 const commentRouter = require("./routes/comment");
+const todoRouter = require("./routes/todo");
 const session = require("express-session");
 
 // const cors = require("cors");
@@ -46,7 +47,15 @@ app.use(
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use((req, res, next) => {
-  console.log("middleware실행!");
+  if (!req.session.userHistory) {
+    req.session.userHistory = [];
+  }
+  req.session.userHistory.push(req.path);
+
+  // console.log('session:', req.session);
+  // console.log("middleware실행!");
+  // console.log('path:', req.path);
+  console.log(req.session.userHistory);
   next();
 });
 
@@ -85,6 +94,9 @@ app.use("/users", usersRouter);
 app.use("/board", boardRouter);
 app.use("/birds", birdRouter);
 app.use("/comment", commentRouter);
+app.use("/todo", todoRouter);
+
+console.log(">>>>>", JSON.stringify(todoRouter));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

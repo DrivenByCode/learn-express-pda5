@@ -71,7 +71,7 @@ router.get("/:id", (req, res, next) => {
         req.session.boardPath.shift();
       }
 
-      console.log(req.session.boardPath);
+      // console.log(req.session.boardPath);
 
       res.json(board);
     })

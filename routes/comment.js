@@ -78,7 +78,7 @@
 const express = require("express");
 const router = express.Router();
 
-const Comment = require("../models/comment");
+const Comment = require("../models/Comment");
 
 router.get("/:boardId/comment", (req, res) => {
   Comment.find({ board: req.params.boardId }).then((boards) => {
