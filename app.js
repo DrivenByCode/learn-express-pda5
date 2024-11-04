@@ -12,7 +12,7 @@ const commentRouter = require("./routes/comment");
 const todoRouter = require("./routes/todo");
 const session = require("express-session");
 
-// const cors = require("cors");
+const cors = require("cors");
 
 // localhost:3000
 
@@ -59,12 +59,12 @@ app.use((req, res, next) => {
   next();
 });
 
-// const corsOptions = {
-//   origin: "http://localhost:5173",
-//   credentials: true,
-// };
+const corsOptions = {
+  origin: "http://localhost:5173",
+  credentials: true,
+};
 
-// app.use(cors(corsOptions));
+app.use(cors(corsOptions));
 
 // app.use(cors());
 
@@ -96,7 +96,7 @@ app.use("/birds", birdRouter);
 app.use("/comment", commentRouter);
 app.use("/todo", todoRouter);
 
-console.log(">>>>>", JSON.stringify(todoRouter));
+app.use("/api/board", boardRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

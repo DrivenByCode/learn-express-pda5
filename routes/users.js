@@ -9,7 +9,7 @@ var router = express.Router();
 
 const User = require("../models/Users");
 
-const { createToken, verifyToken } = require("../utils/auth");
+const { createToken, authenticate } = require("../utils/auth");
 
 router.post("/login", async (req, res, next) => {
   try {
@@ -75,26 +75,6 @@ router.get("/", function (req, res, next) {
   // console.log(req.session);
   res.send("respond with a resource");
 });
-
-async function authenticate(req, res, next) {
-  let token = req.cookies.authToken;
-  let headerToken = req.headers.authorization;
-  if (!token && headerToken) {
-    token = headerToken.split(" ")[1];
-  }
-
-  const user = verifyToken(token);
-  req.user = user;
-
-  if (!user) {
-    const error = new Error("Authorization Failed");
-    error.status = 403;
-
-    next(error);
-  }
-
-  next();
-}
 
 router.get("/protected", authenticate, async (req, res, next) => {
   console.log(req.user);

@@ -32,7 +32,7 @@ userSchema.statics.signUp = async function (email, password) {
 };
 
 userSchema.statics.login = async function (email, password) {
-  // findOne(eamil에 해당하는 정보 찾는다.)
+  // findOne(email에 해당하는 정보 찾는다.)
   const user = await this.findOne({ email });
   if (user) {
     // bcrypt 알고리즘으로 해시되지 않은 비밀번호와 해시된 비밀번호를 비교한다.
@@ -46,6 +46,7 @@ userSchema.statics.login = async function (email, password) {
 };
 
 const visibleUser = userSchema.virtual("visibleUser");
+
 visibleUser.get(function (value, virtual, doc) {
   return {
     _id: doc._id,

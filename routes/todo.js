@@ -6,48 +6,37 @@ const { authenticate } = require("../utils/auth");
 const Todo = require("../models/Todo");
 
 router.get("/", authenticate, (req, res) => {
-  console.log(req.cookies.authToken);
-  if (req.cookies.authToken) {
-    Todo.find().then((todos) => {
+  Todo.find()
+    .then((todos) => {
       res.json(todos);
-    });
-  } else {
-    res.status(400).send();
-  }
+    })
+    .catch(() => res.status(400).send());
 });
 
-router.post("/add", (req, res) => {
-  if (res.cookie.authToken) {
-    const [title, content] = req.body;
-    Todo.create({ title, content }).then((todo) => {
+router.post("/", authenticate, (req, res) => {
+  const { text, color } = req.body;
+  Todo.create({ text, color })
+    .then((todo) => {
       res.json(todo);
-    });
-  } else {
-    res.status(400);
-  }
+    })
+    .catch(() => res.status(400));
 });
 
-router.put("/edit/:postId", (req, res) => {
-  if (res.cookie.authToken && res.cookie.authToken.token.length > 0) {
-    const [title, content] = req.body;
-    Todo.findByIdAndUpdate(req.params.postId, { title, content }).then(
-      (todo) => {
-        res.json(todo);
-      }
-    );
-  } else {
-    res.status(400);
-  }
-});
-
-router.delete("/remove/:postId", (req, res) => {
-  if (res.cookie.authToken && res.cookie.authToken.token.length > 0) {
-    Todo.findByIdAndDelete(req.params.postId).then((todo) => {
+router.put("/edit/:postId", authenticate, (req, res) => {
+  const { text, color } = req.body;
+  Todo.findByIdAndUpdate(req.params.postId, { text, color })
+    .then((todo) => {
       res.json(todo);
-    });
-  } else {
-    res.status(400);
-  }
+    })
+    .catch(() => res.status(400).send());
+});
+
+router.delete("/remove/:postId", authenticate, (req, res) => {
+  Todo.findByIdAndDelete(req.params.postId)
+    .then((todo) => {
+      res.json(todo);
+    })
+    .catch(() => res.status(400).send());
 });
 
 module.exports = router;
